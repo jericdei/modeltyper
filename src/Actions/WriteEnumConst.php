@@ -11,7 +11,7 @@ class WriteEnumConst
      *
      * @return array{type: string, name: string}|string
      */
-    public function __invoke(ReflectionClass $reflection, string $indent = '', bool $jsonOutput = false, bool $useEnums = false): array|string
+    public function __invoke(ReflectionClass $reflection, string $indent = '', bool $jsonOutput = false, bool $useEnums = false, bool $exportEnums = false): array|string
     {
         $entry = '';
 
@@ -30,6 +30,8 @@ class WriteEnumConst
         if ($cases->isNotEmpty()) {
             if ($useEnums) {
                 $entry .= "{$indent}export const enum {$reflection->getShortName()} {\n";
+            } elseif ($exportEnums) {
+                $entry .= "{$indent}export const {$reflection->getShortName()} = {\n";
             } else {
                 $entry .= "{$indent}const {$reflection->getShortName()} = {\n";
             }
@@ -65,7 +67,6 @@ class WriteEnumConst
                 $entry .= "{$indent}} as const;\n\n";
                 $entry .= "{$indent}export type {$reflection->getShortName()} = typeof {$reflection->getShortName()}[keyof typeof {$reflection->getShortName()}]\n\n";
             }
-
         }
 
         if ($jsonOutput) {

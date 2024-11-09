@@ -29,6 +29,7 @@ php artisan vendor:publish --provider="FumeApp\ModelTyper\ModelTyperServiceProvi
 
 > **Note**
 > This package may require you to install Doctrine DBAL. If so you can run:
+>
 > ```bash
 > composer require --dev doctrine/dbal
 > ```
@@ -111,6 +112,7 @@ output-file=./resources/js/types/models.d.ts : Echo the definitions into a file
 --global : Generate typescript interfaces in a global namespace named models
 --json : Output the result as json
 --use-enums : Use typescript enums instead of object literals
+--export-enums : Export the generated enums or object literals
 --plurals : Output model plurals
 --no-relations : Do not include relations
 --optional-relations : Make relations optional fields on the model type
@@ -214,7 +216,6 @@ Then inside `custom_mappings` add the Laravel type as the key and assign the Typ
 
 You can also add mappings for your [Custom Casts](https://laravel.com/docs/11.x/eloquent-mutators#custom-casts)
 
-
 ```php
 'custom_mappings' => [
     'App\Casts\YourCustomCast' => 'string|null',
@@ -251,13 +252,14 @@ declare global {
 ```bash
 artisan model:typer --plurals
 ```
+
 Exports for example, when a `User` model exists:
 
 ```ts
-export type Users = User[]
+export type Users = User[];
 ```
 
-### Output Api.MetApi* resources
+### Output Api.MetApi\* resources
 
 ```bash
 artisan model:typer --api-resources
@@ -266,10 +268,18 @@ artisan model:typer --api-resources
 Exports:
 
 ```ts
-export interface UserResults extends api.MetApiResults { data: Users }
-export interface UserResult extends api.MetApiResults { data: User }
-export interface UserMetApiData extends api.MetApiData { data: User }
-export interface UserResponse extends api.MetApiResponse { data: UserMetApiData }
+export interface UserResults extends api.MetApiResults {
+    data: Users;
+}
+export interface UserResult extends api.MetApiResults {
+    data: User;
+}
+export interface UserMetApiData extends api.MetApiData {
+    data: User;
+}
+export interface UserResponse extends api.MetApiResponse {
+    data: UserMetApiData;
+}
 ```
 
 ### Enable all output options
@@ -386,5 +396,17 @@ export interface User {
 ```
 
 > ModelTyper uses Object Literals by default instead of TS Enums [for opinionated reasons](https://maxheiber.medium.com/alternatives-to-typescript-enums-50e4c16600b1). But you can use `--use-enums` option to use TS Enums instead of Object Literals.
+
+If you also want to export the generated enums or object literals, you can use `--export-enums`.
+
+```ts
+export const UserRoleEnum = {
+    /** Can do anything */
+    ADMIN: "admin",
+    /** Standard read-only */
+    USER: "user",
+};
+export type UseRoleEnum = (typeof UseRoleEnum)[keyof typeof UserRoleEnum];
+```
 
 > Notice how the comments are found and parsed - they must follow the specified format

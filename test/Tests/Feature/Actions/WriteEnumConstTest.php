@@ -11,7 +11,7 @@ use Tests\Traits\UsesInputFiles;
 
 class WriteEnumConstTest extends TestCase
 {
-    use GeneratesOutput, ResolveClassAsReflection,UsesInputFiles;
+    use GeneratesOutput, ResolveClassAsReflection, UsesInputFiles;
 
     /** @test */
     public function testActionCanBeResolvedByApplication()
@@ -47,5 +47,17 @@ class WriteEnumConstTest extends TestCase
         $this->assertArrayHasKey('type', $result);
         $this->assertEquals('Roles', $result['name']);
         $this->assertIsString($result['type']);
+    }
+
+    /** @test */
+    public function testActionCanBeExecutedWithExportEnums()
+    {
+        $action = app(WriteEnumConst::class);
+        $reflectionModel = $this->resolveClassAsReflection(Roles::class);
+
+        $result = $action(reflection: $reflectionModel, exportEnums: true);
+
+        $this->assertIsString($result);
+        $this->assertStringContainsString('export const Roles', $result);
     }
 }

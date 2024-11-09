@@ -12,7 +12,7 @@ class Generator
      *
      * @return string
      */
-    public function __invoke(?string $specificModel = null, bool $global = false, bool $json = false, bool $useEnums = false, bool $plurals = false, bool $apiResources = false, bool $optionalRelations = false, bool $noRelations = false, bool $noHidden = false, bool $timestampsDate = false, bool $optionalNullables = false, bool $resolveAbstract = false, bool $fillables = false, string $fillableSuffix = 'Fillable')
+    public function __invoke(?string $specificModel = null, bool $global = false, bool $json = false, bool $useEnums = false, bool $plurals = false, bool $apiResources = false, bool $optionalRelations = false, bool $noRelations = false, bool $noHidden = false, bool $timestampsDate = false, bool $optionalNullables = false, bool $resolveAbstract = false, bool $fillables = false, string $fillableSuffix = 'Fillable', bool $exportEnums = false)
     {
         $models = app(GetModels::class)($specificModel);
 
@@ -35,7 +35,8 @@ class Generator
             resolveAbstract: $resolveAbstract,
             useEnums: $useEnums,
             fillables: $fillables,
-            fillableSuffix: $fillableSuffix
+            fillableSuffix: $fillableSuffix,
+            exportEnums: $exportEnums
         );
     }
 
@@ -44,7 +45,7 @@ class Generator
      *
      * @param  Collection<int, \Symfony\Component\Finder\SplFileInfo>  $models
      */
-    protected function display(Collection $models, bool $global = false, bool $json = false, bool $useEnums = false, bool $plurals = false, bool $apiResources = false, bool $optionalRelations = false, bool $noRelations = false, bool $noHidden = false, bool $timestampsDate = false, bool $optionalNullables = false, bool $resolveAbstract = false, bool $fillables = false, string $fillableSuffix = 'Fillable'): string
+    protected function display(Collection $models, bool $global = false, bool $json = false, bool $useEnums = false, bool $plurals = false, bool $apiResources = false, bool $optionalRelations = false, bool $noRelations = false, bool $noHidden = false, bool $timestampsDate = false, bool $optionalNullables = false, bool $resolveAbstract = false, bool $fillables = false, string $fillableSuffix = 'Fillable', bool $exportEnums = false): string
     {
         $mappings = app(GetMappings::class)(setTimestampsToDate: $timestampsDate);
 
@@ -65,7 +66,8 @@ class Generator
             optionalNullables: $optionalNullables,
             resolveAbstract: $resolveAbstract,
             fillables: $fillables,
-            fillableSuffix: $fillableSuffix
+            fillableSuffix: $fillableSuffix,
+            exportEnums: $exportEnums
         );
     }
 }

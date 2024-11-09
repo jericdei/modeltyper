@@ -36,6 +36,7 @@ class ModelTyperCommand extends Command
                             {--global : Generate typescript interfaces in a global namespace named models}
                             {--json : Output the result as json}
                             {--use-enums : Use typescript enums instead of object literals}
+                            {--export-enums : Export the generated enums or object literals}
                             {--plurals : Output model plurals}
                             {--no-relations : Do not include relations}
                             {--optional-relations : Make relations optional fields on the model type}
@@ -88,7 +89,8 @@ class ModelTyperCommand extends Command
                 $this->option('optional-nullables'),
                 $this->option('resolve-abstract'),
                 $this->option('fillables'),
-                $this->option('fillable-suffix')
+                $this->option('fillable-suffix'),
+                $this->option('export-enums'),
             );
 
             if ($path) {

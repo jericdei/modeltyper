@@ -34,7 +34,7 @@ class GenerateCliOutput
      * @param  Collection<int, SplFileInfo>  $models
      * @param  array<string, string>  $mappings
      */
-    public function __invoke(Collection $models, array $mappings, bool $global = false, bool $useEnums = false, bool $plurals = false, bool $apiResources = false, bool $optionalRelations = false, bool $noRelations = false, bool $noHidden = false, bool $optionalNullables = false, bool $resolveAbstract = false, bool $fillables = false, string $fillableSuffix = 'Fillable'): string
+    public function __invoke(Collection $models, array $mappings, bool $global = false, bool $useEnums = false, bool $plurals = false, bool $apiResources = false, bool $optionalRelations = false, bool $noRelations = false, bool $noHidden = false, bool $optionalNullables = false, bool $resolveAbstract = false, bool $fillables = false, string $fillableSuffix = 'Fillable', bool $exportEnums = false): string
     {
         $modelBuilder = app(BuildModelDetails::class);
         $colAttrWriter = app(WriteColumnAttribute::class);
@@ -139,8 +139,8 @@ class GenerateCliOutput
 
         collect($this->enumReflectors)
             ->unique(fn (ReflectionClass $reflector) => $reflector->getName())
-            ->each(function (ReflectionClass $reflector) use ($useEnums) {
-                $this->output .= app(WriteEnumConst::class)($reflector, $this->indent, false, $useEnums);
+            ->each(function (ReflectionClass $reflector) use ($useEnums, $exportEnums) {
+                $this->output .= app(WriteEnumConst::class)($reflector, $this->indent, false, $useEnums, $exportEnums);
             });
 
         collect($this->imports)
